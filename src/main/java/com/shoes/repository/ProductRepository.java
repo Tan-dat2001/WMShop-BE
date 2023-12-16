@@ -18,10 +18,11 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 
     boolean existsByName(String name);
 
-    //Home page - customer
+    //Home page - customer - filter (newest)
     @Query(value = "select * from product where status = true order by created_at desc limit 15", nativeQuery = true)
     Optional<List<Product>> getNewsProductsList();
 
+    //Home page - customer - filter (best selling)
     @Query(value = "select * " +
             "from product " +
             "where status = true and sold_quantity is not null " +
@@ -29,7 +30,7 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
             "desc limit 15", nativeQuery = true)
     Optional<List<Product>> getBestSellingProductsList();
 
-    //Shop - customer with category and gender
+    //Shop - customer with category(optional) and gender
     @Query(value = "select p.* " +
             "from product p " +
             "inner join category c on p.category_id = c.id " +
@@ -39,6 +40,7 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
             "order by p.sold_quantity desc", nativeQuery = true)
     Optional<List<Product>> getAllProductsByGenderAndCategory(String gender, Long categoryId);
 
+    //Shop - customer with
     @Query(value = "select p.* " +
             "from product p " +
             "inner join category c on p.category_id = c.id " +

@@ -1,9 +1,14 @@
 package com.shoes.service.Impl;
 
 
+import com.shoes.common.CheckInput;
 import com.shoes.dto.customer.ProductDisplayDto;
 import com.shoes.dto.manager.ProductDto;
+import com.shoes.entity.Category;
 import com.shoes.entity.Product;
+import com.shoes.entity.ProductImage;
+import com.shoes.repository.CategoryRepository;
+import com.shoes.repository.ProductImageRepository;
 import com.shoes.repository.ProductRepository;
 import com.shoes.response.ApiResponse;
 import com.shoes.response.ApiResponseForList;
@@ -21,10 +26,16 @@ import static com.shoes.common.Message.*;
 @Service
 public class ProductServiceImpl implements ProductService {
 
+    private CategoryRepository categoryRepository;
     private ProductRepository productRepository;
+    private ProductImageRepository productImageRepository;
     @Autowired
-    public ProductServiceImpl(ProductRepository productRepository){
+    public ProductServiceImpl(ProductRepository productRepository,
+                              CategoryRepository categoryRepository,
+                              ProductImageRepository productImageRepository){
         this.productRepository = productRepository;
+        this.categoryRepository = categoryRepository;
+        this.productImageRepository = productImageRepository;
     }
 
 
@@ -63,7 +74,15 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public ApiResponse<?> getProduct(String id) {
-        return null;
+        if(CheckInput.stringIsNullOrEmpty(id)){
+            return new ApiResponse<>(HttpStatus.BAD_REQUEST.value(), MSG_BAD_REQUEST, null);
+        }
+        try{
+            ProductDto productDto = new ProductDto(productRepository.findById(Long.parseLong(id)).get());
+            return new ApiResponse<>(HttpStatus.OK.value(), MSG_GET_PRODUCT_SUCCESS, productDto);
+        } catch (Exception e) {
+            return new ApiResponse<>(HttpStatus.INTERNAL_SERVER_ERROR.value(), MSG_GET_PRODUCT_FAIL, null);
+        }
     }
 
     @Override
@@ -77,7 +96,28 @@ public class ProductServiceImpl implements ProductService {
         Product product = productDto.toEntity();
         product.setInventoryQuantity(0);
         product.setStatus(false);
-        return null;
+        Category category = categoryRepository.findById(Long.parseLong(productDto.getCateogoryId())).get();
+        product.setCategory(category);
+        try{
+            Product createProduct = productRepository.save(product);
+            //todo: Save Image list (DONE)
+            //todo: Save productDetail list (NOT YET)
+            for(String productImage: productDto.getImageList()){
+                ProductImage createProductImage = new ProductImage();
+                createProductImage.setUrl(productImage);
+                createProductImage.setProduct(createProduct);
+                try{
+                    productImageRepository.save(createProductImage);
+                }catch (Exception e){
+                    System.out.println(e);
+                    return new ApiResponse<>(HttpStatus.INTERNAL_SERVER_ERROR.value(), MSG_ADD_PICTURE_PRODUCT_FAIL, null);
+                }
+            }
+            return new ApiResponse<>(HttpStatus.CREATED.value(), MSG_CREATE_SUCCESS, null);
+        }catch (Exception e) {
+            System.out.println(e);
+            return new ApiResponse<>(HttpStatus.INTERNAL_SERVER_ERROR.value(), MSG_CREATE_FAIL, null);
+        }
     }
 
     @Override

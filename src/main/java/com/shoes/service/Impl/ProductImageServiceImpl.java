@@ -54,7 +54,8 @@ public class ProductImageServiceImpl implements ProductImageService {
         } catch (Exception e) {
             System.out.println(e);
             return new ApiResponse<>(HttpStatus.INTERNAL_SERVER_ERROR.value(), MSG_ADD_IMAGE_FAIL, null);
-        }    }
+        }
+    }
 
     @Override
     public ApiResponse<?> deleteImage(String imageId) {
