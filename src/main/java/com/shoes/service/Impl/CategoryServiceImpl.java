@@ -7,7 +7,6 @@ import com.shoes.entity.Category;
 import com.shoes.repository.CategoryRepository;
 import com.shoes.response.ApiResponse;
 import com.shoes.service.CategoryService;
-import com.sun.jdi.event.ExceptionEvent;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
@@ -15,7 +14,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 import static com.shoes.common.Message.*;
 
