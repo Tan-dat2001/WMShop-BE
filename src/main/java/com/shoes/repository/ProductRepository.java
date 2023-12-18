@@ -18,11 +18,11 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 
     boolean existsByName(String name);
 
-    //Home page - customer - filter (newest)
+    //Home page - customer
     @Query(value = "select * from product where status = true order by created_at desc limit 15", nativeQuery = true)
     Optional<List<Product>> getNewsProductsList();
 
-    //Home page - customer - filter (best selling)
+    //Home page - customer
     @Query(value = "select * " +
             "from product " +
             "where status = true and sold_quantity is not null " +
@@ -36,17 +36,24 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
             "inner join category c on p.category_id = c.id " +
             "where (:categoryId is null or (c.id = :categoryId)) " +
             "and p.status = true " +
-            "and lower(p.gender) like concat('%',:gender,'%') " +
+            "and (1<>1 or cast(p.name as text) ilike concat('%',:keyword,'%')) " +
             "order by p.sold_quantity desc", nativeQuery = true)
-    Optional<List<Product>> getAllProductsByGenderAndCategory(String gender, Long categoryId);
+    Optional<List<Product>> getProductsListForCustomerByCategory(String keyword, Long categoryId);
 
-    //Shop - customer with
+    //Shop - customer -search
     @Query(value = "select p.* " +
             "from product p " +
             "inner join category c on p.category_id = c.id " +
             "where p.status = true " +
-            "and (1<>1 or lower(p.gender) like concat('%',:gender,'%')) " +
+            "and (1<>1 or cast(p.name as text) ilike concat('%',:keyword,'%')) " +
             "order by p.sold_quantity desc ", nativeQuery = true)
-    Optional<List<Product>> getProductsListForCustomerWithGender(String gender);
+    Optional<List<Product>> getProductsListForCustomerByKeyword(String keyword);
+
+    //Shop
+    @Query(value = "SELECT p.* " +
+            "FROM product p " +
+            "INNER JOIN category c ON p.category_id = c.id " +
+            "WHERE ", nativeQuery = true)
+    Optional<List<Product>> getAllProducts();
 
  }

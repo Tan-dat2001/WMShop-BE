@@ -3,10 +3,7 @@ package com.shoes.controller.customer;
 import com.shoes.response.ApiResponse;
 import com.shoes.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/v1/customer/products")
@@ -19,12 +16,16 @@ public class ProductCustomerController {
     }
 
     @GetMapping
-    public ApiResponse<?> getProductsListByGender(@RequestParam String categoryId,
-                                                  @RequestParam String gender,
+    public ApiResponse<?> getProductsListForCustomer(@RequestParam String categoryId,
+                                                  @RequestParam String keyword,
                                                   @RequestParam String orderByPrice,
                                                   @RequestParam int limit){
-        return productService.getProductsListForCustomer(categoryId,gender,orderByPrice,limit);
+        return productService.getProductsListForCustomer(categoryId,keyword,orderByPrice,limit);
     }
-
+//
+//    @GetMapping("{productId")
+//    public ApiResponse<?> getProductDetail(@PathVariable String productId){
+//        return ;
+//    }
 
 }

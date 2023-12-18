@@ -6,8 +6,10 @@ import com.shoes.dto.customer.ProductDisplayDto;
 import com.shoes.dto.manager.ProductDto;
 import com.shoes.entity.Category;
 import com.shoes.entity.Product;
+import com.shoes.entity.ProductDetail;
 import com.shoes.entity.ProductImage;
 import com.shoes.repository.CategoryRepository;
+import com.shoes.repository.ProductDetailRepository;
 import com.shoes.repository.ProductImageRepository;
 import com.shoes.repository.ProductRepository;
 import com.shoes.response.ApiResponse;
@@ -29,26 +31,29 @@ public class ProductServiceImpl implements ProductService {
     private CategoryRepository categoryRepository;
     private ProductRepository productRepository;
     private ProductImageRepository productImageRepository;
+    private ProductDetailRepository productDetailRepository;
     @Autowired
     public ProductServiceImpl(ProductRepository productRepository,
                               CategoryRepository categoryRepository,
-                              ProductImageRepository productImageRepository){
+                              ProductImageRepository productImageRepository,
+                              ProductDetailRepository productDetailRepository){
         this.productRepository = productRepository;
         this.categoryRepository = categoryRepository;
         this.productImageRepository = productImageRepository;
+        this.productDetailRepository = productDetailRepository;
     }
 
 
     @Override
-    public ApiResponse<?> getProductsListForCustomer(String categoryId, String gender, String orderByPrice, int limit) {
+    public ApiResponse<?> getProductsListForCustomer(String categoryId, String keyword, String orderByPrice, int limit) {
         List<ProductDisplayDto> productDisplayDtoList;
         try{
             List<Product> productList;
             long total;
             if(categoryId.isEmpty()){
-                productList = productRepository.getProductsListForCustomerWithGender(gender).get();
+                productList = productRepository.getProductsListForCustomerByKeyword(keyword).get();
             }else{
-                productList = productRepository.getAllProductsByGenderAndCategory(gender, Long.parseLong(categoryId)).get();
+                productList = productRepository.getProductsListForCustomerByCategory(keyword, Long.parseLong(categoryId)).get();
             }
 
             if(orderByPrice.equals("ASC") && productList.size() > 0){
@@ -87,7 +92,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public ApiResponse<?> createProduct(ProductDto productDto) {
-        if( productDto == null || productDto.getCateogoryId().isEmpty()){
+        if( productDto == null || productDto.getCategoryId().isEmpty()){
             return new ApiResponse<>(HttpStatus.BAD_REQUEST.value(), MSG_BAD_REQUEST, null);
         }
         if(productRepository.existsByName(productDto.getName())){
@@ -96,7 +101,7 @@ public class ProductServiceImpl implements ProductService {
         Product product = productDto.toEntity();
         product.setInventoryQuantity(0);
         product.setStatus(false);
-        Category category = categoryRepository.findById(Long.parseLong(productDto.getCateogoryId())).get();
+        Category category = categoryRepository.findById(Long.parseLong(productDto.getCategoryId())).get();
         product.setCategory(category);
         try{
             Product createProduct = productRepository.save(product);
@@ -112,6 +117,22 @@ public class ProductServiceImpl implements ProductService {
                     System.out.println(e);
                     return new ApiResponse<>(HttpStatus.INTERNAL_SERVER_ERROR.value(), MSG_ADD_PICTURE_PRODUCT_FAIL, null);
                 }
+            }
+            for(String productSize: productDto.getSizeList()){
+                for(String productColor: productDto.getColorList()){
+                    ProductDetail productDetail = new ProductDetail();
+                    productDetail.setProduct(product);
+                    productDetail.setSize(productSize);
+                    productDetail.setColor(productColor);
+                    productDetail.setQuantity(productDto.getInventoryQuantity());
+                    try{
+                        productDetailRepository.save(productDetail);
+                    }catch (Exception e){
+                        System.out.println(e);
+                        return new ApiResponse<>(HttpStatus.INTERNAL_SERVER_ERROR.value(), MSG_ADD_PRODUCT_DETAIL_FAIL, null);
+                    }
+                }
+
             }
             return new ApiResponse<>(HttpStatus.CREATED.value(), MSG_CREATE_SUCCESS, null);
         }catch (Exception e) {

@@ -16,6 +16,7 @@ public class ProductDetailServiceImpl implements ProductDetailService {
 
     @Override
     public ApiResponse<?> createProductDetail(String id) {
+
         return null;
     }
 }

@@ -33,6 +33,7 @@ public final class Message {
     public static final String MSG_GET_PRODUCT_FAIL = "Fail to get product!";
     public static final String MSG_GET_PRODUCT_SUCCESS = "Get product successfully!";
     public static final String MSG_ADD_PICTURE_PRODUCT_FAIL = "There was an error while adding images to the product!";
+    public static final String MSG_ADD_PRODUCT_DETAIL_FAIL = "There was an error while adding product detail!";
     public static final String MSG_UPDATE_PICTURE_PRODUCT_FAIL = "There was an error while updating product images!";
     public static final String MSG_GET_ROLE_LIST_FAIL = "Fail to get roles list!";
     public static final String MSG_GET_ROLE_LIST_SUCCESS = "Get roles list successfully!";

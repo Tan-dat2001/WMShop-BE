@@ -5,6 +5,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 
 @Data
 @NoArgsConstructor
@@ -16,6 +18,9 @@ public class ProductDisplayDto {
     private String name;
     private Long price;
     private Integer soldQuantity;
+    private Integer inventoryQuantity;
+    private List<String> sizeList;
+    private List<String> colorList;
 
     public ProductDisplayDto(Product product){
         this.setId(product.getId().toString());
@@ -23,6 +28,10 @@ public class ProductDisplayDto {
         this.setName(product.getName());
         this.setPrice(product.getPrice());
         this.setSoldQuantity(product.getSoldQuantity() == null ? 0 : product.getSoldQuantity());
+        this.setInventoryQuantity(product.getInventoryQuantity() ==  null ? 0 : product.getInventoryQuantity());
+//        this.setSizeList(product.getSizeListString() == null ? null : product.getSizeListString());
+//        this.setColorList(product.getColorListString() == null ? null : product.getColorListString());
+
     }
 
 

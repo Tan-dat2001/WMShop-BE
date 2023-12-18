@@ -22,7 +22,7 @@ public class ProductDto {
     private int soldQuantity;
     private int inventoryQuantity;
     private Boolean status;
-    private String cateogoryId;
+    private String categoryId;
     private String categoryName;
     private List<String> imageList;
     private List<String> sizeList;
@@ -31,7 +31,7 @@ public class ProductDto {
     private Long createdAt;
 
     public ProductDto(Product product){
-        this.id = product.getId().toString();
+        this.id = product.getId() != null ? product.getId().toString() : "0";
         this.name = product.getName();
         this.description = product.getDescription();
         this.gender = product.getGender();
@@ -39,7 +39,7 @@ public class ProductDto {
         this.soldQuantity = product.getSoldQuantity() != null ? product.getSoldQuantity() : 0;
         this.inventoryQuantity = product.getInventoryQuantity() != null ? product.getInventoryQuantity() : 0;
         this.status = product.getStatus();
-        this.cateogoryId = product.getCategory().getId().toString();
+        this.categoryId = product.getCategory().getId().toString();
         this.categoryName = product.getCategory().getName();
         this.imageList = product.getImageListString();
         this.sizeList = product.getSizeListString();
@@ -52,6 +52,7 @@ public class ProductDto {
         Product product = new Product();
         if(!CheckInput.stringIsNullOrEmpty(this.getId())){
             product.setId(Long.parseLong(this.getId()));
+            System.out.println(this.getId());
         }
         product.setName(this.getName());
         product.setDescription(this.getDescription());
