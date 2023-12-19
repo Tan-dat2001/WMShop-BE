@@ -103,7 +103,7 @@ public class ProductServiceImpl implements ProductService {
             return new ApiResponse<>(HttpStatus.BAD_REQUEST.value(), MSG_NAME_PRODUCT_EXIST, null);
         }
         Product product = productDto.toEntity();
-        product.setInventoryQuantity(0);
+        product.setInventoryQuantity(productDto.getInventoryQuantity());
         product.setStatus(true);
         Category category = categoryRepository.findById(Long.parseLong(productDto.getCategoryId())).get();
         product.setCategory(category);
