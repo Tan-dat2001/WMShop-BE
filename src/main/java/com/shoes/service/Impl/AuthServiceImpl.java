@@ -44,6 +44,7 @@ public class AuthServiceImpl implements AuthService {
     private JwtUtils jwtUtils;
     @Autowired
     private AuthenticationManager authenticationManager;
+
     @Override
     public ApiResponse<?> logIn(LoginRequest loginRequest) {
         if(loginRequest.getEmail().isEmpty() || loginRequest.getPassword().isEmpty()){
@@ -55,9 +56,10 @@ public class AuthServiceImpl implements AuthService {
         SecurityContextHolder.getContext().setAuthentication(authentication);
         String jwt = jwtUtils.generateJwtToken(authentication);
         UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
+        User user = userRepository.findByEmail(loginRequest.getEmail()).get();
         List<String> roles = userDetails.getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority).collect(Collectors.toList());
-        return new ApiResponse(HttpStatus.OK.value(), MSG_LOGIN_SUCCESS, new JwtResponse(jwt, userDetails.getUsername(),roles));
+        return new ApiResponse(HttpStatus.OK.value(), MSG_LOGIN_SUCCESS, new JwtResponse(jwt, userDetails.getUsername(),roles, user.getId().toString()));
     }
 
     @Override
