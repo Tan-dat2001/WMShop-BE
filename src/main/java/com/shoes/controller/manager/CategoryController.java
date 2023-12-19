@@ -16,6 +16,12 @@ public class CategoryController {
     public CategoryController(CategoryService categoryService){
         this.categoryService = categoryService;
     }
+
+    @GetMapping
+    public ApiResponse<?> getAllCategoriesList(){
+        return categoryService.getAllCategoriesMaster();
+    }
+
     @GetMapping("/{id}")
     public ApiResponse<?> getCategory(@PathVariable String id) {return categoryService.getCategory(id);}
 

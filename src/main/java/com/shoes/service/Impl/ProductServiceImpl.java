@@ -110,7 +110,7 @@ public class ProductServiceImpl implements ProductService {
         try{
             Product createProduct = productRepository.save(product);
             //todo: Save Image list (DONE)
-            //todo: Save productDetail list (NOT YET)
+            //todo: Save productDetail list (DONE) - (NOTE: not clearly)
             for(String productImage: productDto.getImageList()){
                 ProductImage createProductImage = new ProductImage();
                 createProductImage.setUrl(productImage);
