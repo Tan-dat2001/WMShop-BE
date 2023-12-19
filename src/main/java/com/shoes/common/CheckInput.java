@@ -2,6 +2,8 @@ package com.shoes.common;
 
 
 import com.shoes.dto.manager.ProductDto;
+import com.shoes.entity.Product;
+import com.shoes.entity.ProductDetail;
 
 import java.time.Instant;
 import java.time.LocalDate;
@@ -89,5 +91,9 @@ public class CheckInput {
         Matcher matcher = pattern.matcher(phoneNumber);
         // Kiểm tra xem số điện thoại có khớp với định dạng không
         return matcher.matches();
+    }
+
+    public static boolean checkInventoryQuantityForCart(ProductDetail productDetail, int quantity) {
+        return  quantity > productDetail.getQuantity() ? false : true;
     }
 }

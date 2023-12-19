@@ -30,7 +30,7 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
             "desc limit 15", nativeQuery = true)
     Optional<List<Product>> getBestSellingProductsList();
 
-    //Shop - customer with category(optional) and gender
+    //Shop - customer with category(optional) - if(category is null && keyword is null) -> get all
     @Query(value = "select p.* " +
             "from product p " +
             "inner join category c on p.category_id = c.id " +
@@ -50,10 +50,10 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     Optional<List<Product>> getProductsListForCustomerByKeyword(String keyword);
 
     //Shop
-    @Query(value = "SELECT p.* " +
-            "FROM product p " +
-            "INNER JOIN category c ON p.category_id = c.id " +
-            "WHERE ", nativeQuery = true)
-    Optional<List<Product>> getAllProducts();
+//    @Query(value = "SELECT p.* " +
+//            "FROM product p " +
+//            "INNER JOIN category c ON p.category_id = c.id " +
+//            "WHERE ", nativeQuery = true)
+//    Optional<List<Product>> getAllProducts();
 
  }

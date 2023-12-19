@@ -112,4 +112,7 @@ public final class Message {
     public static final String MSG_DOB_INCORRECT = "Date of birth is incorrect!";
     public static final String MSG_PHONE_INCORRECT = "Phone number is incorrect!";
     public static final String MSG_REQUIRED_ADDRESS = "Address is required!";
+    public static final String MSG_CAN_NOT_ADD_TO_CART_BECAUSE_QUANTITY_1 = "Can not add to cart because inventory is not enough!";
+    public static final String MSG_CAN_NOT_ADD_TO_CART_BECAUSE_QUANTITY_2 = "Can not add to cart because inventory is not enough, the quantity of this product in your cart is ";
+
 }

@@ -43,7 +43,7 @@ public class ProductServiceImpl implements ProductService {
         this.productDetailRepository = productDetailRepository;
     }
 
-
+    //CUSTOMER
     @Override
     public ApiResponse<?> getProductsListForCustomer(String categoryId, String keyword, String orderByPrice, int limit) {
         List<ProductDisplayDto> productDisplayDtoList;
@@ -77,6 +77,8 @@ public class ProductServiceImpl implements ProductService {
         return null;
     }
 
+
+
     @Override
     public ApiResponse<?> getProduct(String id) {
         if(CheckInput.stringIsNullOrEmpty(id)){
@@ -84,12 +86,14 @@ public class ProductServiceImpl implements ProductService {
         }
         try{
             ProductDto productDto = new ProductDto(productRepository.findById(Long.parseLong(id)).get());
+            //todo: resolve showing list size and color (distinct)
             return new ApiResponse<>(HttpStatus.OK.value(), MSG_GET_PRODUCT_SUCCESS, productDto);
         } catch (Exception e) {
             return new ApiResponse<>(HttpStatus.INTERNAL_SERVER_ERROR.value(), MSG_GET_PRODUCT_FAIL, null);
         }
     }
 
+    //MANAGER
     @Override
     public ApiResponse<?> createProduct(ProductDto productDto) {
         if( productDto == null || productDto.getCategoryId().isEmpty()){
@@ -100,7 +104,7 @@ public class ProductServiceImpl implements ProductService {
         }
         Product product = productDto.toEntity();
         product.setInventoryQuantity(0);
-        product.setStatus(false);
+        product.setStatus(true);
         Category category = categoryRepository.findById(Long.parseLong(productDto.getCategoryId())).get();
         product.setCategory(category);
         try{
