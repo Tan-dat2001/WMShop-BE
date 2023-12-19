@@ -21,7 +21,7 @@ public class PaymentServiceImpl implements PaymentService {
 
     @Override
     public ApiResponse<?> getAll() {
-        List<Payment> paymentList = paymentRepository.findAll();
+//        List<Payment> paymentList = paymentRepository.findAll();
         return null;
     }
 

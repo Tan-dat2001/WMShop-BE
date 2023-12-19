@@ -59,7 +59,8 @@ public class AuthServiceImpl implements AuthService {
         User user = userRepository.findByEmail(loginRequest.getEmail()).get();
         List<String> roles = userDetails.getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority).collect(Collectors.toList());
-        return new ApiResponse(HttpStatus.OK.value(), MSG_LOGIN_SUCCESS, new JwtResponse(jwt, userDetails.getUsername(),roles, user.getId().toString()));
+        return new ApiResponse(HttpStatus.OK.value(), MSG_LOGIN_SUCCESS,
+                new JwtResponse(jwt, userDetails.getUsername(),roles, user.getId().toString(), user.getFirstName(),user.getLastName()));
     }
 
     @Override

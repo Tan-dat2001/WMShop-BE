@@ -18,7 +18,10 @@ public interface PaymentRepository extends JpaRepository<Payment, Long> {
 
     Optional<Payment> findById(Long id);
 
-    Optional<List<Payment>> findByStatus(String status);
+    @Query(value = "SELECT * " +
+            "FROM payment " +
+            "WHERE status = true", nativeQuery = true)
+    Optional<List<Payment>> getPaymentsListByStatus();
 
 
 }
