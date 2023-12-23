@@ -114,5 +114,9 @@ public final class Message {
     public static final String MSG_REQUIRED_ADDRESS = "Address is required!";
     public static final String MSG_CAN_NOT_ADD_TO_CART_BECAUSE_QUANTITY_1 = "Can not add to cart because inventory is not enough!";
     public static final String MSG_CAN_NOT_ADD_TO_CART_BECAUSE_QUANTITY_2 = "Can not add to cart because inventory is not enough, the quantity of this product in your cart is ";
+    public static final String MSG_GET_PAYMENTS_FAIL = "Fail to get payments list!";
+    public static final String MSG_GET_PAYMENTS_SUCCESS = "get payments list successfully!";
+    public static final String MSG_GET_PAYMENT_FAIL = "Fail to get payment!";
+    public static final String MSG_GET_PAYMENT_SUCCESS = "Get payment successfully!";
 
 }

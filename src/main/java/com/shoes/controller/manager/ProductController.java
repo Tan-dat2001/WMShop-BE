@@ -1,6 +1,7 @@
 package com.shoes.controller.manager;
 
 import com.shoes.dto.manager.ProductDto;
+import com.shoes.entity.Product;
 import com.shoes.response.ApiResponse;
 import com.shoes.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +18,7 @@ public class ProductController {
         this.productService = productService;
     }
 
-    @GetMapping("{id}")
+    @GetMapping("/{id}")
     public ApiResponse<?> getProductById(@PathVariable String id){
         return productService.getProduct(id);
     }
@@ -28,5 +29,9 @@ public class ProductController {
         return productService.createProduct(productDto);
     }
 
+//    @GetMapping("/cart/{productId}")
+//    public String getProductEntityById(@PathVariable String productId){
+//        return productService.getProductByIdToDisplayCart(productId).toString();
+//    }
 
 }

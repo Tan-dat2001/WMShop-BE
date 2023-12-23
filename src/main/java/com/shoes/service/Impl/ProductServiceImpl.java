@@ -154,4 +154,17 @@ public class ProductServiceImpl implements ProductService {
     public ApiResponse<?> deleteProduct(String id) {
         return null;
     }
+
+    @Override
+    public Product getProductByIdToDisplayCart(String productId) {
+        if(CheckInput.stringIsNullOrEmpty(productId)){
+            return null;
+        }
+        try{
+            Product product = productRepository.findById(Long.parseLong(productId)).get();
+            return product;
+        } catch (Exception e) {
+            return null;
+        }
+    }
 }

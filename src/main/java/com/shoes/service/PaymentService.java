@@ -6,7 +6,7 @@ public interface PaymentService {
 
     ApiResponse<?> getAll();
 
-    ApiResponse<?> getPaymentMethodByStatus(String status);
+    ApiResponse<?> getPaymentMethodByStatusTrue();
 
     ApiResponse<?> getPaymentMethodById(String id);
 

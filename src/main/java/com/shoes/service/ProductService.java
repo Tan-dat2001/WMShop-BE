@@ -1,6 +1,7 @@
 package com.shoes.service;
 
 import com.shoes.dto.manager.ProductDto;
+import com.shoes.entity.Product;
 import com.shoes.repository.ProductRepository;
 import com.shoes.response.ApiResponse;
 
@@ -19,5 +20,7 @@ public interface ProductService {
     ApiResponse<?> updateProduct(ProductDto productDto);
 
     ApiResponse<?> deleteProduct(String id);
+
+    Product getProductByIdToDisplayCart(String productId);
 
 }

@@ -20,4 +20,5 @@ public interface ProductDetailRepository extends JpaRepository<ProductDetail, Lo
             "And pd.size ilike :size " +
             "AND pd.product_id = :productId", nativeQuery = true)
     ProductDetail getProductDetailByColorAndSizeAndProduct_Id(String color, String size, Long productId);
+
 }

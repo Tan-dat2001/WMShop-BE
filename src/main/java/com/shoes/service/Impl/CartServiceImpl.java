@@ -1,6 +1,7 @@
 package com.shoes.service.Impl;
 
 import com.shoes.common.CheckInput;
+import com.shoes.dto.customer.ProductOfCartDisplayDto;
 import com.shoes.entity.Cart;
 import com.shoes.entity.Product;
 import com.shoes.entity.ProductDetail;
@@ -15,10 +16,13 @@ import com.shoes.response.ApiResponse;
 import com.shoes.service.CartService;
 import org.hibernate.annotations.Check;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static com.shoes.common.Message.*;
 
@@ -42,13 +46,42 @@ public class CartServiceImpl implements CartService {
 
 
     @Override
-    public ApiResponse<?> getCart(String id) {
-        return null;
+    public ApiResponse<?> getCart(String customerId) {
+        List<ProductOfCartDisplayDto> productsList = new ArrayList<>();
+        try{
+            List<Cart> cartList = cartRepository.findByUser_Id(Long.parseLong(customerId), Sort.by(Sort.Order.desc("createdAt"))).get();
+            cartList = cartList.stream().filter(cart -> cart.getOrder() == null).collect(Collectors.toList());
+            for(Cart cart:cartList){
+                if(!productRepository.findById(cart.getProductDetail().getProduct().getId()).get().getStatus()){
+                    cartRepository.delete(cart);
+                }else{
+                    Product product = productRepository.findById(cart.getProductDetail().getProduct().getId()).get();
+                    long currentPrice = product.getPrice();
+                    if(cart.getPrice() != currentPrice){
+                        cart.setPrice(currentPrice);
+                        cartRepository.save(cart);
+                    }
+                    productsList.add(new ProductOfCartDisplayDto(cart,product));
+                }
+            }
+            return new ApiResponse<>(HttpStatus.OK.value(), MSG_GET_PRODUCTS_lIST_SUCCESS, productsList);
+        } catch (Exception e) {
+            System.out.println(e);
+            return new ApiResponse<>(HttpStatus.INTERNAL_SERVER_ERROR.value(), MSG_GET_PRODUCTS_lIST_FAIL, null);
+        }
     }
 
     @Override
     public ApiResponse<?> changeQuantity(ChangeQuantityRequest changeQuantityRequest) {
-        return null;
+        try{
+            Cart cart = cartRepository.findById(Long.parseLong(changeQuantityRequest.getCartId())).get();
+            cart.setQuantity(changeQuantityRequest.getQuantity());
+            cartRepository.save(cart);
+            return new ApiResponse<>(HttpStatus.OK.value(), MSG_SUCCESS_PROCESSING, null);
+        } catch (Exception e) {
+            System.out.println(e);
+            return new ApiResponse<>(HttpStatus.INTERNAL_SERVER_ERROR.value(), MSG_ERROR_PROCESSING, null);
+        }
     }
 
     @Override
@@ -90,6 +123,12 @@ public class CartServiceImpl implements CartService {
 
     @Override
     public ApiResponse<?> deleteCartDetail(String cartId) {
-        return null;
+        try{
+            cartRepository.deleteById(Long.parseLong(cartId));
+            return new ApiResponse<>(HttpStatus.OK.value(), MSG_DELETE_SUCCESS, null);
+        } catch (Exception e) {
+            System.out.println(e);
+            return new ApiResponse<>(HttpStatus.INTERNAL_SERVER_ERROR.value(), MSG_ERROR_PROCESSING, null);
+        }
     }
 }
