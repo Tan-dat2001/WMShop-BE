@@ -28,6 +28,7 @@ public class OrderCustomerServiceImpl implements OrderCustomerService {
     private CartRepository cartRepository;
     private OrderDetailRepository orderDetailRepository;
     private ProductRepository productRepository;
+    private ProductDetailRepository productDetailRepository;
     @Autowired
     public OrderCustomerServiceImpl(PaymentRepository paymentRepository,
                                     OrderCustomerRepository orderCustomerRepository,
@@ -35,7 +36,8 @@ public class OrderCustomerServiceImpl implements OrderCustomerService {
                                     OrderStatusRepository orderStatusRepository,
                                     CartRepository cartRepository,
                                     OrderDetailRepository orderDetailRepository,
-                                    ProductRepository productRepository){
+                                    ProductRepository productRepository,
+                                    ProductDetailRepository productDetailRepository){
         this.paymentRepository = paymentRepository;
         this.orderCustomerRepository = orderCustomerRepository;
         this.userRepository = userRepository;
@@ -43,6 +45,7 @@ public class OrderCustomerServiceImpl implements OrderCustomerService {
         this.cartRepository = cartRepository;
         this.orderDetailRepository = orderDetailRepository;
         this.productRepository = productRepository;
+        this.productDetailRepository = productDetailRepository;
     }
 
     @Override
@@ -155,6 +158,9 @@ public class OrderCustomerServiceImpl implements OrderCustomerService {
                 orderDetail.setPrice(cart.getPrice());
                 orderDetail.setTotal(cart.getPrice() * cart.getQuantity());
                 orderDetailRepository.save(orderDetail);
+                ProductDetail productDetail = productDetailRepository.findById(Long.parseLong(cart.getProductDetail().getId().toString())).get();
+                productDetail.setQuantity(productDetail.getQuantity() - cart.getQuantity());
+                productDetailRepository.save(productDetail);
             }
             return new ApiResponse<>(HttpStatus.OK.value(), MSG_DO_ORDER_SUCCESS, null);
         }catch (Exception e) {
