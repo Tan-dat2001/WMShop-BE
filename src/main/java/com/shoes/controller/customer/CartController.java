@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
-@RequestMapping("/api/v1/carts")
+@RequestMapping("/api/v1/customer/carts")
 public class CartController {
 
     private CartService cartService;
