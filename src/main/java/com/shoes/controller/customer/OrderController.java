@@ -22,4 +22,9 @@ public class OrderController{
             return orderCustomerService.doOrder(doOrderRequest);
     }
 
+    @GetMapping("/list/{customerId}")
+    ApiResponse<?> getOrdersListForCustomer(@PathVariable String customerId){
+        return orderCustomerService.getOrdersListForCustomer(customerId);
+    }
+
 }

@@ -17,7 +17,7 @@ public class DoOrderRequest {
     private String deliveryPhone;
     private Long deliveryDate;
     private Long orderDate;
-    private String note;
+//    private String note;
     private Long totalPrice;
     //Paypal
     private String currency;

@@ -2,7 +2,9 @@ package com.shoes.common;
 
 
 import java.sql.Timestamp;
+import java.time.Instant;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 
 public class Function {
 
@@ -10,6 +12,9 @@ public class Function {
         return Timestamp.valueOf(localDateTime).getTime();
     }
 
+    public static LocalDateTime toLocalDateTimeFromLong(Long longDate){
+        return LocalDateTime.ofInstant(Instant.ofEpochMilli(longDate), ZoneId.systemDefault());
+    }
     public static String normalizeName(String name) {
         if (name != null && !name.isEmpty()) {
             // Loại bỏ khoảng trống dư thừa và chuyển tất cả chữ cái về chữ thường
