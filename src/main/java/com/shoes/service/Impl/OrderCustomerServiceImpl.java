@@ -4,10 +4,7 @@ import com.shoes.common.CheckInput;
 import com.shoes.entity.Cart;
 import com.shoes.entity.Order;
 import com.shoes.entity.Payment;
-import com.shoes.repository.OrderCustomerRepository;
-import com.shoes.repository.OrderStatusRepository;
-import com.shoes.repository.PaymentRepository;
-import com.shoes.repository.UserRepository;
+import com.shoes.repository.*;
 import com.shoes.request.DoOrderRequest;
 import com.shoes.response.ApiResponse;
 import com.shoes.service.OrderCustomerService;
@@ -27,15 +24,18 @@ public class OrderCustomerServiceImpl implements OrderCustomerService {
     private OrderCustomerRepository orderCustomerRepository;
     private UserRepository userRepository;
     private OrderStatusRepository orderStatusRepository;
+    private CartRepository cartRepository;
     @Autowired
     public OrderCustomerServiceImpl(PaymentRepository paymentRepository,
                                     OrderCustomerRepository orderCustomerRepository,
                                     UserRepository userRepository,
-                                    OrderStatusRepository orderStatusRepository){
+                                    OrderStatusRepository orderStatusRepository,
+                                    CartRepository cartRepository){
         this.paymentRepository = paymentRepository;
         this.orderCustomerRepository = orderCustomerRepository;
         this.userRepository = userRepository;
         this.orderStatusRepository = orderStatusRepository;
+        this.cartRepository = cartRepository;
     }
 
     @Override
@@ -74,17 +74,26 @@ public class OrderCustomerServiceImpl implements OrderCustomerService {
             order.setDeliveryDate(doOrderRequest.getDeliveryDate());
             order.setOrderDate(doOrderRequest.getOrderDate());
             order.setTotalPrice(doOrderRequest.getTotalPrice());
-            Payment payment = paymentRepository.findById(Long.parseLong(doOrderRequest.getPaymentMethodId())).get();
-            if(payment.getName().equals("Cash On Delivery")){
+//            Payment payment = paymentRepository.findById(Long.parseLong(doOrderRequest.getPaymentMethodId())).get();
+//            if(payment.getName().equals("Cash On Delivery")){
+//                order.setPaidStatus(false);
+//            }else if (payment.getName().equals("Paypal")){
+//                order.setPaidStatus(true);
+//            }
+            order.setPayment(paymentRepository.findById(Long.parseLong(doOrderRequest.getPaymentMethodId())).get());
+            if(doOrderRequest.getPaymentMethodId().equals("1") ){
                 order.setPaidStatus(false);
-            }else if (payment.getName().equals("Paypal")){
+            }else if(doOrderRequest.getPaymentMethodId().equals("2")){
                 order.setPaidStatus(true);
             }
             order.setUser(userRepository.findById(Long.parseLong(doOrderRequest.getCustomerId())).get());
             order.setOrderStatus(orderStatusRepository.findByName("Waiting for confirm").get());
             Order orderSaved = orderCustomerRepository.save(order);
-//            List<Cart> cartList =
-
+            List<Cart> cartList = cartRepository.getCartsListToOrder(Long.parseLong(doOrderRequest.getCustomerId())).get();
+            for (Cart cart:cartList){
+                cart.setOrder(orderSaved);
+                cartRepository.save(cart);
+            }
             return new ApiResponse<>(HttpStatus.OK.value(), MSG_DO_ORDER_SUCCESS, null);
         }catch (Exception e) {
             System.out.println(e);

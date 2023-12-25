@@ -18,11 +18,11 @@ public class DoOrderRequest {
     private Long deliveryDate;
     private Long orderDate;
     private String note;
-    private String paymentMethodId;
     private Long totalPrice;
     //Paypal
     private String currency;
-    private String method;
+//    private String method;
+    private String paymentMethodId;
     private String intent;
     private String description;
 

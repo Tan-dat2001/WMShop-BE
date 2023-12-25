@@ -43,7 +43,7 @@ public class ProductOfCartDisplayDto {
         System.out.println(cart.getProductDetail().getProduct().getId().toString());
         System.out.println(product.getId().toString());
         this.setId(cart.getId().toString());
-        this.setImageUrl(product.getImageListString().get(0));
+        this.setImageUrl(product.getImageListString() == null ? null : product.getImageListString().get(0));
         this.setName(product.getName());
         this.setQuantity(cart.getQuantity());
         this.setUnitPrice(cart.getPrice());
