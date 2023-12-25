@@ -1,5 +1,6 @@
 package com.shoes.dto.customer;
 
+import com.shoes.common.Function;
 import com.shoes.entity.Product;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -29,10 +30,11 @@ public class ProductDisplayDto {
         this.setPrice(product.getPrice());
         this.setSoldQuantity(product.getSoldQuantity() == null ? 0 : product.getSoldQuantity());
         this.setInventoryQuantity(product.getInventoryQuantity() ==  null ? 0 : product.getInventoryQuantity());
-//        this.setSizeList(product.getSizeListString() == null ? null : product.getSizeListString());
-//        this.setColorList(product.getColorListString() == null ? null : product.getColorListString());
+        this.setSizeList(product.getSizeListString() == null ? null : Function.convertUnique(product.getSizeListString()));
+        this.setColorList(product.getColorListString() == null ? null : Function.convertUnique(product.getColorListString()));
 
     }
+
 
 
 }

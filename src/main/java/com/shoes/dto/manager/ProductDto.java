@@ -42,8 +42,8 @@ public class ProductDto {
         this.categoryId = product.getCategory().getId().toString();
         this.categoryName = product.getCategory().getName();
         this.imageList = product.getImageListString();
-        this.sizeList = product.getSizeListString();
-        this.colorList = product.getColorListString();
+        this.sizeList = Function.convertUnique(product.getSizeListString());
+        this.colorList = Function.convertUnique(product.getColorListString());
         this.createdAt = null != product.getCreatedAt() ? Function.toLongFromTimeStamp(product.getCreatedAt()) : 0;
         this.updatedAt = null != product.getUpdatedAt() ? Function.toLongFromTimeStamp(product.getUpdatedAt()) : 0;
     }

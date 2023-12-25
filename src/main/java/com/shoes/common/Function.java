@@ -5,9 +5,15 @@ import java.sql.Timestamp;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
 
 public class Function {
 
+    public static List<String> convertUnique(List<String> list){
+        return new ArrayList<>(new HashSet<>(list));
+    }
     public static long toLongFromTimeStamp(LocalDateTime localDateTime) {
         return Timestamp.valueOf(localDateTime).getTime();
     }
