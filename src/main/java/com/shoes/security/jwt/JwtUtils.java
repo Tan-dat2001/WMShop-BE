@@ -18,36 +18,44 @@ import java.util.Date;
 @NoArgsConstructor
 public class JwtUtils {
     // Đoạn JWT_SECRET này là bí mật, chỉ có phía server biết
-    @Value("${application.security.jwt.secret-key}")
+    @Value("${bezkoder.app.jwtSecret}")
     private String jwtSecret;
     //Thời gian có hiệu lực của chuỗi jwt
-    @Value("${application.security.jwt.jwtExpirationMs}")
+    @Value("${bezkoder.app.jwtExpirationMs}")
     private int jwtExpirationMs;
+
     // Tạo ra jwt từ thông tin user
     public String generateJwtToken(Authentication authentication){
         UserDetailsImpl userPrincipal = (UserDetailsImpl) authentication.getPrincipal();
-        return Jwts
+        String generatedToken = Jwts
                 .builder()
                 .setSubject(userPrincipal.getUsername())
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(new Date().getTime() + jwtExpirationMs))
-                .signWith(getSignInkey(), SignatureAlgorithm.HS256)
+                .signWith(getSignInkey(), SignatureAlgorithm.HS512)
                 .compact();
+        log.info("Generated Token: {}", generatedToken);
+        return generatedToken;
     }
 
     private Key getSignInkey(){
-        byte[] keyBytes = Decoders.BASE64.decode(jwtSecret);
-        return Keys.hmacShaKeyFor(keyBytes);
+//        byte[] keyBytes = Decoders.BASE64.decode(jwtSecret);
+//        return Keys.hmacShaKeyFor(keyBytes);
+        return Keys.hmacShaKeyFor(Decoders.BASE64.decode(jwtSecret));
     }
 
     // Lấy thông tin user từ jwt
     public String getUserNameFromJwtToken(String token){
-        return Jwts.parserBuilder().setSigningKey(jwtSecret).build().parseClaimsJwt(token).getBody().getSubject();
+        return Jwts.parserBuilder().setSigningKey(getSignInkey()).build().parseClaimsJws(token).getBody().getSubject();
     }
 
     public boolean validateJwtToken(String authToken) {
         try {
-            Jwts.parserBuilder().setSigningKey(jwtSecret).build().parseClaimsJwt(authToken);
+            log.info("authTolen: {}", authToken);
+//            Jwts.parserBuilder().setSigningKey(getSignInkey()).build().parseClaimsJws(authToken);
+//            return true;
+            Jws<Claims> claims = Jwts.parserBuilder().setSigningKey(getSignInkey()).build().parseClaimsJws(authToken);
+            log.info("Decoded Token: {}", claims.getBody().toString());
             return true;
         } catch (SignatureException e) {
             log.error("Invalid JWT signature: {}", e.getMessage());

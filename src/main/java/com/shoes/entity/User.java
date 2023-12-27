@@ -43,7 +43,7 @@ public class User {
     @Column(name = "updated_at")
     @UpdateTimestamp
     private LocalDateTime updatedAt;
-    @OneToMany(cascade = CascadeType.REFRESH, mappedBy = "user")
+    @OneToMany(cascade = CascadeType.REFRESH, mappedBy = "user", fetch = FetchType.EAGER)
     private List<UserRole> userRoleList;
     @OneToMany(cascade = CascadeType.REFRESH, mappedBy = "user")
     private List<Cart> cartList;

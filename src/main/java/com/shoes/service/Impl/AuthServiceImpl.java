@@ -6,6 +6,7 @@ import com.shoes.entity.UserRole;
 import com.shoes.repository.RoleRepository;
 import com.shoes.repository.UserRepository;
 import com.shoes.repository.UserRoleRepository;
+import com.shoes.request.ChangePasswordRequest;
 import com.shoes.request.LoginRequest;
 import com.shoes.request.SignUpRequest;
 import com.shoes.response.ApiResponse;
@@ -13,7 +14,9 @@ import com.shoes.response.JwtResponse;
 import com.shoes.security.jwt.JwtUtils;
 import com.shoes.security.service.UserDetailsImpl;
 import com.shoes.service.AuthService;
+import com.shoes.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -44,6 +47,10 @@ public class AuthServiceImpl implements AuthService {
     private JwtUtils jwtUtils;
     @Autowired
     private AuthenticationManager authenticationManager;
+
+    @Autowired
+    @Lazy
+    private UserService userService;
 
     @Override
     public ApiResponse<?> logIn(LoginRequest loginRequest) {
@@ -91,5 +98,10 @@ public class AuthServiceImpl implements AuthService {
             System.out.println(e);
             return new ApiResponse<>(HttpStatus.INTERNAL_SERVER_ERROR.value(), MSG_REGISTRY_FAIL, null);
         }
+    }
+
+    @Override
+    public ApiResponse<?> changePassword(ChangePasswordRequest changePasswordRequest) {
+        return userService.changePassword(changePasswordRequest);
     }
 }
