@@ -1,8 +1,10 @@
 package com.shoes.service.Impl;
 
+import com.shoes.common.CheckInput;
 import com.shoes.dto.manager.UserDto;
 import com.shoes.entity.User;
 import com.shoes.repository.UserRepository;
+import com.shoes.request.ChangeInforCustomerRequest;
 import com.shoes.request.ChangePasswordRequest;
 import com.shoes.response.ApiResponse;
 import com.shoes.service.UserService;
@@ -56,6 +58,29 @@ public class UserServiceImpl implements UserService {
         } catch (Exception e) {
             System.out.println(e);
             return new ApiResponse<>(HttpStatus.INTERNAL_SERVER_ERROR.value(), MSG_CHANGE_PASSWORD_FAIL, null); // thất bại
+        }
+    }
+
+    @Override
+    public ApiResponse<?> changeInforCustomer(ChangeInforCustomerRequest request) {
+        if(!CheckInput.isValidName(request.getFirstName()) || !CheckInput.isValidName(request.getLastName())) {
+            return new ApiResponse<>(HttpStatus.BAD_REQUEST.value(), MSG_NAME_INCORRECT, null);
+        }else if(!CheckInput.isValidPhoneNumber(request.getPhone())){
+            return new ApiResponse<>(HttpStatus.BAD_REQUEST.value(), MSG_PHONE_INCORRECT, null);
+        }else if(CheckInput.stringIsNullOrEmpty(request.getAddress())){
+            return new ApiResponse<>(HttpStatus.BAD_REQUEST.value(), MSG_REQUIRED_ADDRESS, null);
+        }
+        try {
+            User customer = userRepository.findById(Long.parseLong(request.getId().toString())).get();
+            customer.setFirstName(request.getFirstName());
+            customer.setLastName(request.getLastName());
+            customer.setPhone(request.getPhone());
+            customer.setAddress(request.getAddress());
+            userRepository.save(customer);
+            return new ApiResponse<>(HttpStatus.OK.value(), MSG_UPDATE_SUCCESS, null);
+        } catch (Exception e) {
+            System.out.println(e);
+            return new ApiResponse<>(HttpStatus.INTERNAL_SERVER_ERROR.value(), MSG_UPDATE_FAIL, null);
         }
     }
 
