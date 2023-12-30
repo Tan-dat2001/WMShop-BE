@@ -34,4 +34,9 @@ public class ProductController {
 //        return productService.getProductByIdToDisplayCart(productId).toString();
 //    }
 
+    @DeleteMapping("/{id}")
+    public ApiResponse<?> deleteProduct(@PathVariable String productId){
+        return productService.deleteProduct(productId);
+    }
+
 }
