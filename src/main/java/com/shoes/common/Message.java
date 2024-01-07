@@ -32,6 +32,8 @@ public final class Message {
     public static final String MSG_GET_ORDER_STATUS_LIST_SUCCESS = "Get statuses list successfully!";
     public static final String MSG_GET_PRODUCT_FAIL = "Fail to get product!";
     public static final String MSG_GET_PRODUCT_SUCCESS = "Get product successfully!";
+    public static final String MSG_DISABLED_PRODUCT_FAIL = "Fail to DISABLED product!";
+    public static final String MSG_DISABLED_PRODUCT_SUCCESS = "SUCCESS to DISABLED product!";
     public static final String MSG_ADD_PICTURE_PRODUCT_FAIL = "There was an error while adding images to the product!";
     public static final String MSG_ADD_PRODUCT_DETAIL_FAIL = "There was an error while adding product detail!";
     public static final String MSG_UPDATE_PICTURE_PRODUCT_FAIL = "There was an error while updating product images!";

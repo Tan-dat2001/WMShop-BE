@@ -1,5 +1,6 @@
 package com.shoes.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -21,6 +22,7 @@ public class Payment {
     private String name;
     @Column(name = "status")
     private Boolean status;
+    @JsonIgnore
     @OneToMany(cascade = CascadeType.REFRESH, mappedBy = "payment")
     private List<Order> orderList;
 }

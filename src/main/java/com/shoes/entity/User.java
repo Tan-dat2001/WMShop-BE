@@ -1,5 +1,6 @@
 package com.shoes.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
@@ -43,10 +44,13 @@ public class User {
     @Column(name = "updated_at")
     @UpdateTimestamp
     private LocalDateTime updatedAt;
+    @JsonIgnore
     @OneToMany(cascade = CascadeType.REFRESH, mappedBy = "user", fetch = FetchType.EAGER)
     private List<UserRole> userRoleList;
+    @JsonIgnore
     @OneToMany(cascade = CascadeType.REFRESH, mappedBy = "user")
     private List<Cart> cartList;
+    @JsonIgnore
     @OneToMany(cascade = CascadeType.REFRESH, mappedBy = "user")
     private List<Order> orderList;
 }

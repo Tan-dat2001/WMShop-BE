@@ -21,6 +21,8 @@ public interface ProductService {
 
     ApiResponse<?> deleteProduct(String id);
 
+    ApiResponse<?> disabledProduct(String id);
+
     Product getProductByIdToDisplayCart(String productId);
 
 }

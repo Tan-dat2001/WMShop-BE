@@ -13,6 +13,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 import static com.shoes.common.Message.*;
 
 @Service
@@ -35,8 +37,21 @@ public class UserServiceImpl implements UserService {
             User user = userRepository.findById(Long.parseLong(id)).get();
             user.setPassword(passwordEncoder.encode(user.getPassword()));
             UserDto userDto = new UserDto(user);
+//            List<User> userList = userRepository.getUsersList();
+//            System.out.println(userList.stream().toList());
             return new ApiResponse<>(HttpStatus.OK.value(), MSG_USER_SUCCESS, userDto);
         } catch (Exception e) {
+            System.out.println(e);
+            return new ApiResponse<>(HttpStatus.INTERNAL_SERVER_ERROR.value(), MSG_USER_FAIL, null);
+        }
+    }
+
+    @Override
+    public ApiResponse<?> getCustomerList() {
+        try{
+            List<User> userList = userRepository.getUsersList();
+            return new ApiResponse<>(HttpStatus.OK.value(), MSG_USER_SUCCESS, userList);
+        }catch (Exception e) {
             System.out.println(e);
             return new ApiResponse<>(HttpStatus.INTERNAL_SERVER_ERROR.value(), MSG_USER_FAIL, null);
         }
@@ -83,5 +98,8 @@ public class UserServiceImpl implements UserService {
             return new ApiResponse<>(HttpStatus.INTERNAL_SERVER_ERROR.value(), MSG_UPDATE_FAIL, null);
         }
     }
+
+
+
 
 }

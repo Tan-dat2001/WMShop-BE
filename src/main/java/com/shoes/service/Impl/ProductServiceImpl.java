@@ -152,7 +152,35 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public ApiResponse<?> deleteProduct(String id) {
+//        if (CheckInput.stringIsNullOrEmpty(id)) {
+//            return new ApiResponse<>(HttpStatus.BAD_REQUEST.value(), MSG_BAD_REQUEST, null);
+//        }
+//        try{
+//            Product product =productRepository.findById(Long.parseLong(id)).get();
+//        }catch (Exception e) {
+//            System.out.println(e);
+//            return new ApiResponse<>(HttpStatus.NOT_FOUND.value(), MSG_NOT_FOUND_BY_ID, null);
+//        }
+
+
         return null;
+    }
+
+    //not implement yet
+    @Override
+    public ApiResponse<?> disabledProduct(String id) {
+        if(CheckInput.stringIsNullOrEmpty(id)){
+            return new ApiResponse<>(HttpStatus.BAD_REQUEST.value(), MSG_BAD_REQUEST, null);
+        }
+        try{
+            Product product = productRepository.findById(Long.parseLong(id)).get();
+            product.setStatus(false);
+            productRepository.save(product);
+            return new ApiResponse<>(HttpStatus.OK.value(), MSG_DISABLED_PRODUCT_SUCCESS, null);
+        }catch (Exception e) {
+            System.out.println(e);
+            return new ApiResponse<>(HttpStatus.INTERNAL_SERVER_ERROR.value(), MSG_DISABLED_PRODUCT_FAIL, null);
+        }
     }
 
     @Override
