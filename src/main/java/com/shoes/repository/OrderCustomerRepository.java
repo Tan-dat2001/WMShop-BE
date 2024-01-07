@@ -18,8 +18,7 @@ public interface OrderCustomerRepository extends JpaRepository<Order,Long> {
             "ORDER BY order_date DESC", nativeQuery = true)
     Optional<List<Order>> getOrdersListForCustomer(Long customerId);
 
-
-//    @Query(value = "" , nativeQuery = true)
-//    Optional<List<Order>> getOrderCustomerList(Long)
+    @Query(value = "SELECT * FROM orders ORDER BY order_date DESC", nativeQuery = true)
+    Optional<List<Order>> getAllOrder();
 
 }
