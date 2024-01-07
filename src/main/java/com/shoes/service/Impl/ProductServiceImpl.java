@@ -168,13 +168,17 @@ public class ProductServiceImpl implements ProductService {
 
     //not implement yet
     @Override
-    public ApiResponse<?> disabledProduct(String id) {
-        if(CheckInput.stringIsNullOrEmpty(id)){
+    public ApiResponse<?> disabledProduct(String id, String statusProduct) {
+        if(CheckInput.stringIsNullOrEmpty(id) || statusProduct.isEmpty()){
             return new ApiResponse<>(HttpStatus.BAD_REQUEST.value(), MSG_BAD_REQUEST, null);
         }
         try{
             Product product = productRepository.findById(Long.parseLong(id)).get();
-            product.setStatus(false);
+            if(statusProduct.equals("false")){
+                product.setStatus(false);
+            }else{
+                product.setStatus(true);
+            }
             productRepository.save(product);
             return new ApiResponse<>(HttpStatus.OK.value(), MSG_DISABLED_PRODUCT_SUCCESS, null);
         }catch (Exception e) {

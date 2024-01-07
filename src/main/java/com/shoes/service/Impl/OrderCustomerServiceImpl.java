@@ -50,7 +50,51 @@ public class OrderCustomerServiceImpl implements OrderCustomerService {
 
     @Override
     public ApiResponse<?> getOrderCustomer(String id) {
-        return null;
+        if(CheckInput.stringIsNullOrEmpty(id)){
+            return new ApiResponse<>(HttpStatus.BAD_REQUEST.value(), MSG_BAD_REQUEST, null);
+        }
+        try{
+            Order order = orderCustomerRepository.findById(Long.parseLong(id)).get();
+            OrderCustomerDisplayDto orderCustomerDisplayDto = new OrderCustomerDisplayDto();
+            orderCustomerDisplayDto.setId(order.getId().toString());
+            orderCustomerDisplayDto.setOrderDate(order.getOrderDate());
+            orderCustomerDisplayDto.setCustomerId(order.getUser().getId().toString());
+            orderCustomerDisplayDto.setCustomerName(order.getUser().getLastName() + " " + order.getUser().getFirstName());
+            orderCustomerDisplayDto.setDeliveryName(order.getDeliveryName());
+            orderCustomerDisplayDto.setDeliveryAddress(order.getDeliveryAddress());
+            orderCustomerDisplayDto.setDeliveryPhone(order.getDeliveryPhone());
+            orderCustomerDisplayDto.setDeliveryDate(order.getDeliveryDate());
+            orderCustomerDisplayDto.setTotalPriceOrder(order.getTotalPrice());
+            orderCustomerDisplayDto.setOrderStatusId(order.getOrderStatus().getId().toString());
+            orderCustomerDisplayDto.setOrderStatusName(order.getOrderStatus().getName());
+            orderCustomerDisplayDto.setPaymentId(order.getPayment().getId().toString());
+            orderCustomerDisplayDto.setPaymentName(order.getPayment().getName());
+            orderCustomerDisplayDto.setPaidStatus(order.getPaidStatus() ? "paid" : "unpaid");
+            orderCustomerDisplayDto.setCreateAt(null != order.getCreatedAt() ? Function.toLongFromTimeStamp(order.getCreatedAt()) : 0);
+            orderCustomerDisplayDto.setUpdateAt(null != order.getUpdatedAt() ? Function.toLongFromTimeStamp(order.getUpdatedAt()) : 0);
+            List<OrderCustomerDisplayDto.ProductDisplayInOrder> productList = new ArrayList<>();
+            for(Cart cart:order.getCartList()){
+                OrderCustomerDisplayDto.ProductDisplayInOrder productDisplayInOrder = new OrderCustomerDisplayDto.ProductDisplayInOrder();
+                productDisplayInOrder.setProductId(cart.getProductDetail().getProduct().getId().toString());
+                Product productEntity = productRepository.findById(Long.parseLong(cart.getProductDetail().getProduct().getId().toString())).get();
+                if(productEntity.getImageListString().size() > 0){
+                    productDisplayInOrder.setProductImage(productEntity.getImageListString().get(0));
+                }else{
+                    productDisplayInOrder.setProductImage(null);
+                }
+                productDisplayInOrder.setName(productEntity.getName());
+                productDisplayInOrder.setQuantity(cart.getQuantity());
+                productDisplayInOrder.setInventoryQuantity(cart.getProductDetail().getQuantity());
+                productDisplayInOrder.setUnitPrice(cart.getPrice());
+                productDisplayInOrder.setTotalPrice(cart.getQuantity() * cart.getPrice());
+                productList.add(productDisplayInOrder);
+            }
+            orderCustomerDisplayDto.setProductsList(productList);
+            return new ApiResponse<>(HttpStatus.OK.value(), MSG_GET_ORDER_CUSTOMER_LIST_SUCCESS,orderCustomerDisplayDto);
+        }catch (Exception e) {
+            System.out.println(e);
+            return new ApiResponse<>(HttpStatus.INTERNAL_SERVER_ERROR.value(), MSG_GET_ORDER_CUSTOMER_LIST_FAIL, null);
+        }
     }
 
     @Override

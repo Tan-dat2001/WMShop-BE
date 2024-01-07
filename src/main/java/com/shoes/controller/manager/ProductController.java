@@ -34,11 +34,15 @@ public class ProductController {
 //        return productService.getProductByIdToDisplayCart(productId).toString();
 //    }
 
-    @DeleteMapping("/{id}")
-    public ApiResponse<?> deleteProduct(@PathVariable String productId){
-        return productService.deleteProduct(productId);
-    }
+//    @DeleteMapping("/{id}")
+//    public ApiResponse<?> deleteProduct(@PathVariable String productId){
+//        return productService.deleteProduct(productId);
+//    }
 
+    @PutMapping("/changeStatus")
+    public ApiResponse<?> changeStatusProduct(@RequestParam String productId, @RequestParam String status){
+        return productService.disabledProduct(productId,status);
+    }
 
 
 }
