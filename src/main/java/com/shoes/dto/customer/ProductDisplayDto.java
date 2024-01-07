@@ -20,6 +20,8 @@ public class ProductDisplayDto {
     private Long price;
     private Integer soldQuantity;
     private Integer inventoryQuantity;
+    private String categoryName;
+    private String categoryId;
     private List<String> sizeList;
     private List<String> colorList;
 
@@ -32,7 +34,8 @@ public class ProductDisplayDto {
         this.setInventoryQuantity(product.getInventoryQuantity() ==  null ? 0 : product.getInventoryQuantity());
         this.setSizeList(product.getSizeListString() == null ? null : Function.convertUnique(product.getSizeListString()));
         this.setColorList(product.getColorListString() == null ? null : Function.convertUnique(product.getColorListString()));
-
+        this.setCategoryName(product.getCategory().getName());
+        this.setCategoryId(product.getCategory().getId().toString());
     }
 
 
