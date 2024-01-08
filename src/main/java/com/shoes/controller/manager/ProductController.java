@@ -1,7 +1,6 @@
 package com.shoes.controller.manager;
 
 import com.shoes.dto.manager.ProductDto;
-import com.shoes.entity.Product;
 import com.shoes.response.ApiResponse;
 import com.shoes.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
